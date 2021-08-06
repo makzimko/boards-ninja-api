@@ -1,0 +1,23 @@
+version: "3"
+services:
+  api:
+    image: mhart/alpine-node:14
+    container_name: boards-ninja-api
+    restart: always
+    volumes:
+      - ./:/usr/app
+      - ./node_modules:/usr/app/node_modules
+    ports:
+      - 8080:8080
+    working_dir: /usr/app
+    command: npm start
+  mongo:
+    image: mongo
+    container_name: boards-ninja-mongo
+  mongo-express:
+    image: mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+    ports:
+    - 8081:8081
