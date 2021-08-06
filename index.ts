@@ -1,15 +1,7 @@
-import { createServer } from 'http';
+import App from './src/app';
 
 const port = 8080;
 
-const server = createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.end(
-    JSON.stringify({
-      hello: 'world',
-    }),
-  );
+App.listen(port, () => {
+  console.log(`Application started on ${port}`);
 });
-
-server.listen(port);
