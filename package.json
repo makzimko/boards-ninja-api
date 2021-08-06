@@ -1,0 +1,27 @@
+{
+  "name": "boards-ninja-api",
+  "version": "0.0.1",
+  "description": "Boards Ninja API",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makzimko/boards-ninja-api.git"
+  },
+  "keywords": [
+    "lists",
+    "tickets",
+    "boards",
+    "agile",
+    "todo",
+    "list"
+  ],
+  "author": "Maksym Tkachuk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/makzimko/boards-ninja-api/issues"
+  },
+  "homepage": "https://github.com/makzimko/boards-ninja-api#readme"
+}
