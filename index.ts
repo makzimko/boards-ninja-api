@@ -4,7 +4,7 @@ import config from './config';
 
 const port = 8080;
 
-createConnection(config.databaseUrl).then(() => {
+createConnection(config.databaseUrl, config.certificateFile).then(() => {
   App.listen(port, () => {
     console.log(`Application started on ${port}`);
   });
