@@ -2,24 +2,32 @@ import Router from '@koa/router';
 import WorkItemModel from '../../../models/WorkItem';
 
 const workItemsController = new Router();
+const defaultSelect = 'id name resolved -_id';
 
 workItemsController.prefix('/v1/work-items');
 
 workItemsController.get('/', async ctx => {
-  ctx.body = await WorkItemModel.find().select('id name -_id');
+  ctx.body = await WorkItemModel.find()
+    .select(defaultSelect)
+    .lean({ defaults: true });
 });
 
 workItemsController.post('/', async ctx => {
   const data = ctx.request.body;
 
-  const result = await WorkItemModel.create(data);
+  const workItem = new WorkItemModel(data);
+  await workItem.save();
 
-  ctx.body = WorkItemModel.findById(result._id).seect('id name -_id');
+  ctx.body = await WorkItemModel.findById(workItem._id)
+    .select(defaultSelect)
+    .lean({ defaults: true });
 });
 
 workItemsController.get('/:id', async ctx => {
   const { id } = ctx.params;
-  const workItem = await WorkItemModel.findOne({ id }).select('id name -_id');
+  const workItem = await WorkItemModel.findOne({ id })
+    .select(defaultSelect)
+    .lean({ defaults: true });
 
   if (!workItem) {
     ctx.throw(404);
