@@ -18,7 +18,31 @@ workItemsController.post('/', async ctx => {
 });
 
 workItemsController.get('/:id', async ctx => {
-  ctx.throw(501);
+  const { id } = ctx.params;
+  const workItem = await WorkItemModel.findOne({ id }).select('id name -_id');
+
+  if (!workItem) {
+    ctx.throw(404);
+  }
+
+  ctx.body = workItem;
+});
+
+workItemsController.patch('/:id', async ctx => {
+  const { id } = ctx.params;
+  const { id: bodyId, ...rest } = ctx.request.body;
+
+  if (bodyId) {
+    ctx.throw(400, 'Changing of work item ID is not allowed');
+  }
+
+  const workItem = await WorkItemModel.findOneAndUpdate({ id }, rest);
+
+  if (!workItem) {
+    ctx.throw(404);
+  }
+
+  ctx.body = await WorkItemModel.findById(workItem._id).select('id name -_id');
 });
 
 export default workItemsController;
