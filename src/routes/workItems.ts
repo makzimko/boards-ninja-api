@@ -7,13 +7,15 @@ const workItemsRouter = new Router();
 workItemsRouter.prefix('/work-items');
 
 workItemsRouter.get('/', async ctx => {
-  const result = await WorkItemsController.find();
-  ctx.body = result;
+  ctx.body = await WorkItemsController.find();
 });
 
 workItemsRouter.post('/', async ctx => {
-  const result = await WorkItemsController.create(ctx.request.body as WorkItem);
-  ctx.body = result;
+  ctx.body = await WorkItemsController.create(ctx.request.body as WorkItem);
+});
+
+workItemsRouter.get('/:id', async ctx => {
+  ctx.throw(401);
 });
 
 export default workItemsRouter;

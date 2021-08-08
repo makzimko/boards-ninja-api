@@ -1,22 +1,24 @@
 import WorkItemModel from '../models/WorkItem';
 import { WorkItem } from '../models/types';
 
-const create = async (data: WorkItem) => {
-  return WorkItemModel.create(data);
+const create = async (data: WorkItem): Promise<WorkItem> => {
+  const result = await WorkItemModel.create(data);
+
+  return WorkItemModel.findById(result._id).select('id name -_id');
 };
 
-const find = () => {
-  return WorkItemModel.find();
+const findById = (id: number) => {
+  return WorkItemModel.find({ id });
 };
 
-const findOneById = id => {
-  return WorkItemModel.findById(id);
+const find = (): Array<WorkItem> => {
+  return WorkItemModel.find().select('id name -_id');
 };
 
 const WorkItemsController = {
   create,
   find,
-  findOneById,
+  findById,
 };
 
 export default WorkItemsController;
