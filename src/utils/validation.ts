@@ -1,4 +1,4 @@
-import { RouterContext } from 'koa-router';
+import { RouterContext } from '@koa/router';
 
 export type ValidationError = string | undefined;
 export type Validator = (ctx: RouterContext) => ValidationError;
