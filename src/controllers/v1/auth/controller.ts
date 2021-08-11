@@ -7,14 +7,13 @@ import SessionModel from '../../../models/Session';
 
 const authController = new Router();
 
-authController.prefix('/auth');
+authController.prefix('/v1/auth');
 
 authController.post('/login', async ctx => {
   const { login, password } = ctx.request.body;
 
   const user = await UserModel.findOne({ login }).select('password salt');
 
-  console.log('login', login, user);
   if (!user) {
     ctx.throw(401, 'Incorrect login or password');
   }
