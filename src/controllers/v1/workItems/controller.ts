@@ -1,10 +1,15 @@
 import Router from '@koa/router';
 import WorkItemModel from '../../../models/WorkItem';
+import { validate } from '../../../utils/validation';
+import { suppressIdInBody, validateIdInParams } from './validators';
+import authMiddleware from '../../../middleware/auth';
 
 const workItemsController = new Router();
 const defaultSelect = 'id name resolved -_id';
 
 workItemsController.prefix('/v1/work-items');
+
+workItemsController.use(authMiddleware);
 
 workItemsController.get('/', async ctx => {
   ctx.body = await WorkItemModel.find()
@@ -13,6 +18,8 @@ workItemsController.get('/', async ctx => {
 });
 
 workItemsController.post('/', async ctx => {
+  validate([suppressIdInBody], ctx);
+
   const data = ctx.request.body;
 
   const workItem = new WorkItemModel(data);
@@ -24,6 +31,8 @@ workItemsController.post('/', async ctx => {
 });
 
 workItemsController.get('/:id', async ctx => {
+  validate([validateIdInParams], ctx);
+
   const { id } = ctx.params;
   const workItem = await WorkItemModel.findOne({ id })
     .select(defaultSelect)

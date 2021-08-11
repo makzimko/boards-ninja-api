@@ -3,7 +3,8 @@ import bodyParser from 'koa-bodyparser';
 import error from 'koa-json-error';
 
 import systemController from './controllers/system';
-import workItemsController from './controllers/v1/workItems/workItems';
+import authController from './controllers/v1/auth/controller';
+import workItemsController from './controllers/v1/workItems/controller';
 
 const App = new Koa();
 
@@ -18,6 +19,7 @@ App.use(
   }),
 );
 
+App.use(authController.routes());
 App.use(systemController.routes());
 App.use(workItemsController.routes());
 
