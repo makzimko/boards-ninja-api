@@ -26,6 +26,7 @@ App.use(systemController.routes());
 App.use(workItemsController.routes());
 
 App.use(async ctx => {
+  console.log(ctx.request);
   ctx.throw(404);
 });
 

@@ -4,10 +4,15 @@ import randomString from 'randomstring';
 
 import UserModel from '../../../models/User';
 import SessionModel from '../../../models/Session';
+import authMiddleware from '../../../middleware/auth';
 
 const authController = new Router();
 
 authController.prefix('/v1/auth');
+
+authController.get('/', authMiddleware, async ctx => {
+  ctx.body = ctx.state.user;
+});
 
 authController.post('/login', async ctx => {
   const { login, password } = ctx.request.body;
@@ -25,7 +30,7 @@ authController.post('/login', async ctx => {
   }
 
   const session = new SessionModel({
-    login,
+    user: user._id,
     sessionId: randomString.generate(),
   });
   await session.save();
