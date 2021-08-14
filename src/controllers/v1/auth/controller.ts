@@ -37,7 +37,10 @@ authController.post(
     });
     await session.save();
 
+    console.log('COOKIE', session);
+
     ctx.cookies.set('sessionId', session.sessionId);
+    ctx.state.sessionId = session.sessionId;
 
     await next();
   },
