@@ -14,32 +14,37 @@ authController.get('/', authMiddleware, async ctx => {
   ctx.body = ctx.state.user;
 });
 
-authController.post('/login', async ctx => {
-  const { login, password } = ctx.request.body;
+authController.post(
+  '/login',
+  async (ctx, next) => {
+    const { login, password } = ctx.request.body;
 
-  const user = await UserModel.findOne({ login }).select('password salt');
+    const user = await UserModel.findOne({ login }).select('password salt');
 
-  if (!user) {
-    ctx.throw(401, 'Incorrect login or password');
-  }
+    if (!user) {
+      ctx.throw(401, 'Incorrect login or password');
+    }
 
-  const encryptedPassword = md5(user.salt + password);
+    const encryptedPassword = md5(user.salt + password);
 
-  if (user.password !== encryptedPassword) {
-    ctx.throw(401, 'Incorrect login or password');
-  }
+    if (user.password !== encryptedPassword) {
+      ctx.throw(401, 'Incorrect login or password');
+    }
 
-  const session = new SessionModel({
-    user: user._id,
-    sessionId: randomString.generate(),
-  });
-  await session.save();
+    const session = new SessionModel({
+      user: user._id,
+      sessionId: randomString.generate(),
+    });
+    await session.save();
 
-  ctx.cookies.set('sessionId', session.sessionId);
+    ctx.cookies.set('sessionId', session.sessionId);
 
-  ctx.body = {
-    session: session.sessionId,
-  };
-});
+    await next();
+  },
+  authMiddleware,
+  ctx => {
+    ctx.body = ctx.state.user;
+  },
+);
 
 export default authController;
