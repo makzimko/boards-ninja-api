@@ -12,8 +12,7 @@ export const validateIdInParams: Validator = ctx => {
 };
 
 export const suppressIdInBody: Validator = ctx => {
-  // @ts-ignore
-  const { id } = ctx0.request.body;
+  const { id } = ctx.request.body;
 
   if (!isUndefined(id)) {
     return 'Manual set of ID is not allowed';
