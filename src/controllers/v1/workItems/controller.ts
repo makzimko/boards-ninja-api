@@ -63,13 +63,19 @@ workItemsController.get('/:id', async ctx => {
 });
 
 workItemsController.patch('/:id', async ctx => {
-  validate([validateIdInParams, suppressWorkItemUnarchive], ctx);
+  validate([validateIdInParams], ctx);
 
   const { id } = ctx.params;
   const { id: bodyId, ...rest } = ctx.request.body;
 
   if (bodyId) {
     ctx.throw(400, 'Changing of work item ID is not allowed');
+  }
+
+  const { archived } = await WorkItemModel.findOne({ id });
+
+  if (archived) {
+    ctx.throw(400, 'Updating of archived work items is not allowed');
   }
 
   if (rest.archived) {
