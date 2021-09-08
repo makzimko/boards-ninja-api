@@ -1,18 +1,27 @@
 import Router from '@koa/router';
+
 import WorkItemModel from '../../../models/WorkItem';
 import { validate } from '../../../utils/validation';
-import { suppressIdInBody, validateIdInParams } from './validators';
+import {
+  suppressIdInBody,
+  suppressWorkItemUnarchive,
+  validateIdInParams,
+} from './validators';
 import authMiddleware from '../../../middleware/auth';
 
 const workItemsController = new Router();
-const defaultSelect = 'id name resolved -_id';
+const defaultSelect = 'id name resolved archived -_id';
 
 workItemsController.prefix('/v1/work-items');
 
 workItemsController.use(authMiddleware);
 
 workItemsController.get('/', async ctx => {
-  ctx.body = await WorkItemModel.find()
+  ctx.body = await WorkItemModel.find({
+    archived: {
+      $ne: true,
+    },
+  })
     .select(defaultSelect)
     .lean({ defaults: true });
 });
@@ -26,6 +35,14 @@ workItemsController.post('/', async ctx => {
   await workItem.save();
 
   ctx.body = await WorkItemModel.findById(workItem._id)
+    .select(defaultSelect)
+    .lean({ defaults: true });
+});
+
+workItemsController.get('/archive', async ctx => {
+  ctx.body = await WorkItemModel.find({
+    archived: true,
+  })
     .select(defaultSelect)
     .lean({ defaults: true });
 });
@@ -46,11 +63,17 @@ workItemsController.get('/:id', async ctx => {
 });
 
 workItemsController.patch('/:id', async ctx => {
+  validate([validateIdInParams, suppressWorkItemUnarchive], ctx);
+
   const { id } = ctx.params;
   const { id: bodyId, ...rest } = ctx.request.body;
 
   if (bodyId) {
     ctx.throw(400, 'Changing of work item ID is not allowed');
+  }
+
+  if (rest.archived) {
+    rest.resolved = true;
   }
 
   const workItem = await WorkItemModel.findOneAndUpdate({ id }, rest);

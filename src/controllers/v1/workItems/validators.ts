@@ -18,3 +18,11 @@ export const suppressIdInBody: Validator = ctx => {
     return 'Manual set of ID is not allowed';
   }
 };
+
+export const suppressWorkItemUnarchive: Validator = ctx => {
+  const { archived } = ctx.request.body;
+
+  if (archived === false) {
+    return 'Unarchiving of work items is not allowed';
+  }
+};

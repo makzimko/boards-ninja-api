@@ -11,6 +11,10 @@ const schema = new Schema({
     type: Boolean,
     default: false,
   },
+  archived: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 schema.plugin(autoIncrement.plugin, {
