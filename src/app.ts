@@ -6,6 +6,7 @@ import cors from '@koa/cors';
 import systemController from './controllers/system';
 import authController from './controllers/v1/auth/controller';
 import workItemsController from './controllers/v1/workItems/controller';
+import tagsController from './controllers/v1/tags/controller';
 
 const App = new Koa();
 
@@ -24,6 +25,7 @@ App.use(
 App.use(authController.routes());
 App.use(systemController.routes());
 App.use(workItemsController.routes());
+App.use(tagsController.routes());
 
 App.use(async ctx => {
   console.log(ctx.request);

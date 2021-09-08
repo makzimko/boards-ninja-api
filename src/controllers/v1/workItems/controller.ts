@@ -9,11 +9,9 @@ import {
 } from './validators';
 import authMiddleware from '../../../middleware/auth';
 
-const workItemsController = new Router();
 const defaultSelect = 'id name resolved archived -_id';
-
+const workItemsController = new Router();
 workItemsController.prefix('/v1/work-items');
-
 workItemsController.use(authMiddleware);
 
 workItemsController.get('/', async ctx => {
