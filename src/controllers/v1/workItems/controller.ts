@@ -59,7 +59,7 @@ workItemsController.patch('/:id', async ctx => {
     ctx.throw(404);
   }
 
-  ctx.body = await WorkItemModel.findById(workItem._id).select('id name -_id');
+  ctx.body = await WorkItemModel.findById(workItem._id).select(defaultSelect);
 });
 
 export default workItemsController;
