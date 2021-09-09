@@ -39,7 +39,9 @@ authController.post(
 
     console.log('COOKIE', session);
 
-    ctx.cookies.set('sessionId', session.sessionId);
+    ctx.cookies.set('sessionId', session.sessionId, {
+      expires: 9999999999 + Date.now(),
+    });
     ctx.state.sessionId = session.sessionId;
 
     await next();
