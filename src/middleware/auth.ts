@@ -3,8 +3,6 @@ import SessionModel from '../models/Session';
 const authMiddleware = async (ctx, next) => {
   const sessionId = ctx.state.sessionId || ctx.cookies.get('sessionId');
 
-  console.log('COOKIE_2', sessionId);
-
   if (!sessionId) {
     ctx.throw(401);
   }

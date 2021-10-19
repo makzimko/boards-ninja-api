@@ -28,7 +28,6 @@ App.use(workItemsController.routes());
 App.use(tagsController.routes());
 
 App.use(async ctx => {
-  console.log(ctx.request);
   ctx.throw(404);
 });
 
