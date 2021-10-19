@@ -2,11 +2,7 @@ import Router from '@koa/router';
 
 import WorkItemModel from '../../../models/WorkItem';
 import { validate } from '../../../utils/validation';
-import {
-  suppressIdInBody,
-  suppressWorkItemUnarchive,
-  validateIdInParams,
-} from './validators';
+import { suppressIdInBody, validateIdInParams } from './validators';
 import authMiddleware from '../../../middleware/auth';
 
 const defaultSelect = 'id name resolved archived -_id';
@@ -15,13 +11,33 @@ workItemsController.prefix('/v1/work-items');
 workItemsController.use(authMiddleware);
 
 workItemsController.get('/', async ctx => {
-  ctx.body = await WorkItemModel.find({
+  const {
+    sortBy = 'id',
+    sortOrder = 1,
+    limit = 10,
+    offset = 0,
+  } = ctx.request.query;
+
+  const filter = {
     archived: {
       $ne: true,
     },
-  })
-    .select(defaultSelect)
-    .lean({ defaults: true });
+  };
+
+  const result = await WorkItemModel.paginate(filter, {
+    select: defaultSelect,
+    lean: {
+      defaults: true,
+    },
+    limit,
+    offset,
+    sort: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  ctx.set('X-Total-Count', result.totalDocs);
+  ctx.body = result.docs;
 });
 
 workItemsController.post('/', async ctx => {
@@ -38,11 +54,31 @@ workItemsController.post('/', async ctx => {
 });
 
 workItemsController.get('/archive', async ctx => {
-  ctx.body = await WorkItemModel.find({
+  const {
+    sortBy = 'id',
+    sortOrder = 1,
+    limit = 10,
+    offset = 0,
+  } = ctx.request.query;
+
+  const filter = {
     archived: true,
-  })
-    .select(defaultSelect)
-    .lean({ defaults: true });
+  };
+
+  const result = await WorkItemModel.paginate(filter, {
+    select: defaultSelect,
+    lean: {
+      defaults: true,
+    },
+    limit,
+    offset,
+    sort: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  ctx.set('X-Total-Count', result.totalDocs);
+  ctx.body = result.docs;
 });
 
 workItemsController.get('/:id', async ctx => {

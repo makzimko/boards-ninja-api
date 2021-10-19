@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": [ "es2015" ],
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types", "./src"]
+  },
 }

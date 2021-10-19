@@ -1,4 +1,9 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model, Types, ObjectId } from 'mongoose';
+
+export type Session = {
+  user: ObjectId;
+  sessionId: string;
+};
 
 const schema = new Schema({
   user: {
@@ -11,6 +16,6 @@ const schema = new Schema({
   },
 });
 
-const SessionModel = model('Session', schema);
+const SessionModel = model<Session>('Session', schema);
 
 export default SessionModel;

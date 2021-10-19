@@ -31,6 +31,7 @@
     "@types/koa": "^2.13.4",
     "@types/koa-router": "^7.4.4",
     "@types/lodash": "^4.14.172",
+    "@types/mongoose-paginate-v2": "^1.4.0",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",
     "eslint": "^7.32.0",
@@ -51,6 +52,7 @@
     "mongoose": "^5.13.5",
     "mongoose-auto-increment": "^5.0.1",
     "mongoose-lean-defaults": "^2.0.1",
+    "mongoose-paginate-v2": "^1.4.2",
     "randomstring": "^1.2.1",
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"

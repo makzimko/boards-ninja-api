@@ -1,8 +1,16 @@
 import { Schema, model, connection } from 'mongoose';
 import autoIncrement from 'mongoose-auto-increment';
 import mongooseLeanDefaults from 'mongoose-lean-defaults';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 autoIncrement.initialize(connection);
+
+export type WorkItem = {
+  id: number;
+  name: string;
+  resolved: boolean;
+  archived: boolean;
+};
 
 const schema = new Schema({
   id: Number,
@@ -23,7 +31,8 @@ schema.plugin(autoIncrement.plugin, {
   startAt: 1,
 });
 schema.plugin(mongooseLeanDefaults);
+schema.plugin(mongoosePaginate);
 
-const WorkItemModel = model('WorkItem', schema);
+const WorkItemModel = model<WorkItem>('WorkItem', schema);
 
 export default WorkItemModel;
