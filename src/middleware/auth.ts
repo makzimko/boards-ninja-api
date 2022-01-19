@@ -9,7 +9,7 @@ const authMiddleware = async (ctx, next) => {
 
   const session = await SessionModel.findOne({ sessionId }).populate(
     'user',
-    '-salt -password',
+    '-salt -encryptedPassword',
   );
 
   if (!session) {
