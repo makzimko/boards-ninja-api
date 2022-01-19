@@ -1,12 +1,14 @@
 import Router from '@koa/router';
-import randomString from 'randomstring';
 
-import UserModel from '../../models/User';
-import SessionModel from '../../models/Session';
+import { UserModel, SessionModel } from '../../models';
 import authMiddleware from '../../middleware/auth';
 
 const authRouter = new Router();
 authRouter.prefix('/v1/auth');
+
+authRouter.get('/', authMiddleware, ctx => {
+  ctx.body = ctx.state.user;
+});
 
 authRouter.post(
   '/login',
