@@ -3,10 +3,8 @@ import bodyParser from 'koa-bodyparser';
 import error from 'koa-json-error';
 import cors from '@koa/cors';
 
-import systemController from './controllers/system';
-import authController from './controllers/v1/auth/controller';
-import workItemsController from './controllers/v1/workItems/controller';
-import tagsController from './controllers/v1/tags/controller';
+import systemRouter from './routes/system';
+import authRouter from './routes/v1/auth';
 
 const App = new Koa();
 
@@ -22,10 +20,8 @@ App.use(
   }),
 );
 
-App.use(authController.routes());
-App.use(systemController.routes());
-App.use(workItemsController.routes());
-App.use(tagsController.routes());
+App.use(systemRouter.routes());
+App.use(authRouter.routes());
 
 App.use(async ctx => {
   ctx.throw(404);
