@@ -6,11 +6,18 @@ interface IUser {
   encryptedPassword: string;
   salt: string;
 }
+export type UserMethods = {
+  checkPassword: {
+    (this: IUserDocument, password: string): boolean;
+  };
+};
 
-export interface IUserDocument extends IUser, Document {
-  validatePassword(): boolean;
-}
+export interface IUserDocument extends IUser, Document, UserMethods {}
 
-export interface IUserModel extends Model<IUserDocument> {
-  authenticate(login: string, password: string): IUserDocument;
-}
+export type UserStatics = {
+  authenticate: {
+    (this: IUserModel, login: string, password: string): Promise<IUserDocument>;
+  };
+};
+
+export interface IUserModel extends Model<IUserDocument>, UserStatics {}

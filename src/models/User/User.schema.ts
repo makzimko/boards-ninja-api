@@ -1,8 +1,8 @@
 import { Schema } from 'mongoose';
 
 import { IUserDocument } from './User.types';
-import { authenticate } from './User.statics';
-import { validatePassword } from './User.methods';
+import userStatics from './User.statics';
+import userMethods from './User.methods';
 
 const UserSchema = new Schema<IUserDocument>({
   login: {
@@ -15,8 +15,7 @@ const UserSchema = new Schema<IUserDocument>({
   salt: String,
 });
 
-UserSchema.statics.authenticate = authenticate;
-
-UserSchema.methods.validatePassword = validatePassword;
+UserSchema.static(userStatics);
+UserSchema.method(userMethods);
 
 export default UserSchema;
