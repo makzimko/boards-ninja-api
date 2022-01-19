@@ -1,13 +1,18 @@
 import Router from '@koa/router';
+import UserModel from '../../models/User';
 
 const authRouter = new Router();
 authRouter.prefix('/v1/auth');
 
-authRouter.post('/login', ctx => {
+authRouter.post('/login', async ctx => {
   const { login, password } = ctx.request.body;
+  try {
+    const user = await UserModel.authenticate(login, password);
 
-  console.log('LOGIN', login, password);
-  ctx.body = 'Hello world!';
+    ctx.body = user._id;
+  } catch (e) {
+    ctx.throw(401, e);
+  }
 });
 
 export default authRouter;

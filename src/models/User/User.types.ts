@@ -12,5 +12,5 @@ export interface IUserDocument extends IUser, Document {
 }
 
 export interface IUserModel extends Model<IUserDocument> {
-  authenticate(): boolean;
+  authenticate(login: string, password: string): IUserDocument;
 }
