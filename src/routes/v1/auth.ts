@@ -14,13 +14,7 @@ authRouter.post(
     const { login, password } = ctx.request.body;
     try {
       const user = await UserModel.authenticate(login, password);
-
-      const session = new SessionModel({
-        user: user._id,
-        sessionId: randomString.generate(),
-      });
-
-      await session.save();
+      const session = await SessionModel.generate(user._id);
 
       ctx.cookies.set('sessionId', session.sessionId, {
         expires: new Date(9999999999 + Date.now()),

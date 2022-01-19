@@ -1,7 +1,11 @@
-import SessionSchema from './Session.schema';
 import { model } from 'mongoose';
-import { ISessionDocument } from './Sessions.types';
 
-const SessionModel = model<ISessionDocument>('Session', SessionSchema);
+import SessionSchema from './Session.schema';
+import { ISessionDocument, ISessionModel } from './Sessions.types';
+
+const SessionModel = model<ISessionDocument, ISessionModel>(
+  'Session',
+  SessionSchema,
+);
 
 export default SessionModel;

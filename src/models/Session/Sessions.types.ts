@@ -7,4 +7,12 @@ interface ISession {
 
 export interface ISessionDocument extends ISession, Document {}
 
-export type ISessionModel = Model<ISessionDocument>;
+export type SessionStatics = {
+  generate: {
+    (this: ISessionModel, userId: ObjectId): Promise<ISessionDocument>;
+  };
+};
+
+export interface ISessionModel
+  extends Model<ISessionDocument>,
+    SessionStatics {}
