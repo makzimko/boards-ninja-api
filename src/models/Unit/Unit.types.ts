@@ -3,6 +3,7 @@ import { ObjectId, Document, PaginateModel } from 'mongoose';
 interface IUnit {
   name: string;
   project: ObjectId;
+  completed: boolean;
 }
 
 export type UnitMethods = Record<string, unknown>;

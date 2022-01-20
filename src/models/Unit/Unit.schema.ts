@@ -14,6 +14,10 @@ const UnitSchema = new Schema<IUnitDocument>({
     ref: 'Project',
     required: true,
   },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 UnitSchema.plugin(mongooseLeanDefaults);
