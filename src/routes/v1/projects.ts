@@ -23,7 +23,31 @@ projectsRouter.get(
   projectMiddleware,
   async ctx => {
     const project = ctx.state.project;
-    ctx.body = await UnitModel.find({ project: project._id });
+
+    const {
+      sortBy = '_id',
+      sortOrder = 1,
+      limit = 5,
+      offset = 0,
+    } = ctx.request.query;
+
+    const filter = {
+      project: project._id,
+    };
+
+    const result = await UnitModel.paginate(filter, {
+      lean: {
+        defaults: true,
+      },
+      limit,
+      offset,
+      sort: {
+        [sortBy]: sortOrder,
+      },
+    });
+
+    ctx.set('X-Total-Count', result.totalDocs);
+    ctx.body = result.docs;
   },
 );
 

@@ -1,4 +1,4 @@
-import { ObjectId, Document, Model } from 'mongoose';
+import { ObjectId, Document, PaginateModel } from 'mongoose';
 
 interface IUnit {
   name: string;
@@ -9,4 +9,4 @@ export type UnitMethods = Record<string, unknown>;
 
 export interface IUnitDocument extends IUnit, Document, UnitMethods {}
 
-export type IUnitModel = Model<IUnitDocument>;
+export type IUnitModel = PaginateModel<IUnitDocument>;
