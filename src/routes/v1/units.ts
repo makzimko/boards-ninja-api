@@ -3,17 +3,20 @@ import Router from '@koa/router';
 import { UnitModel } from '../../models';
 import authMiddleware from '../../middleware/auth';
 
+const defaultSelect = '-__v';
 const unitsRouter = new Router();
 unitsRouter.prefix('/v1/units');
 
-unitsRouter.get('/', async ctx => {
-  ctx.body = await UnitModel.find({}, null);
+unitsRouter.get('/', authMiddleware, async ctx => {
+  ctx.body = await UnitModel.find({}, null, { select: defaultSelect });
 });
 
 unitsRouter.get('/:id', authMiddleware, async ctx => {
   const { id } = ctx.params;
 
-  const unit = await UnitModel.findById(id).lean({ defaults: true });
+  const unit = await UnitModel.findById(id, defaultSelect).lean({
+    defaults: true,
+  });
 
   if (!unit) {
     ctx.throw(404);
@@ -32,7 +35,10 @@ unitsRouter.patch('/:id', authMiddleware, async ctx => {
     ctx.throw(404);
   }
 
-  ctx.body = await UnitModel.findById(unit._id).lean({ defaults: true });
+  ctx.body = await UnitModel.findById(unit._id).lean({
+    defaults: true,
+    select: defaultSelect,
+  });
 });
 
 unitsRouter.post('/', async ctx => {
@@ -41,7 +47,7 @@ unitsRouter.post('/', async ctx => {
   const unit = new UnitModel(data);
   await unit.save();
 
-  ctx.body = await UnitModel.findById(unit._id);
+  ctx.body = await UnitModel.findById(unit._id, { select: defaultSelect });
 });
 
 export default unitsRouter;
