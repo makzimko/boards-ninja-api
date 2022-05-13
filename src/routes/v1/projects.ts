@@ -10,7 +10,7 @@ const projectsRouter = new Router();
 projectsRouter.prefix('/v1/projects');
 
 projectsRouter.get('/', authMiddleware, async ctx => {
-  ctx.body = await ProjectModel.find({}, null, { select: defaultSelect });
+  ctx.body = await ProjectModel.find({}, defaultSelect);
 });
 
 projectsRouter.get('/:key', authMiddleware, projectMiddleware, async ctx => {
@@ -27,7 +27,7 @@ projectsRouter.get(
     const {
       sortBy = '_id',
       sortOrder = 1,
-      limit = 5,
+      limit = 10,
       offset = 0,
     } = ctx.request.query;
 

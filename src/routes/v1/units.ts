@@ -8,7 +8,7 @@ const unitsRouter = new Router();
 unitsRouter.prefix('/v1/units');
 
 unitsRouter.get('/', authMiddleware, async ctx => {
-  ctx.body = await UnitModel.find({}, null, { select: defaultSelect });
+  ctx.body = await UnitModel.find({}, defaultSelect);
 });
 
 unitsRouter.get('/:id', authMiddleware, async ctx => {
