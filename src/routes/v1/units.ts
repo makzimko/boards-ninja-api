@@ -41,6 +41,19 @@ unitsRouter.patch('/:id', authMiddleware, async ctx => {
   });
 });
 
+unitsRouter.delete('/:id', authMiddleware, async ctx => {
+  const { id } = ctx.params;
+
+  const deleted = await UnitModel.findByIdAndDelete(id);
+
+  if (!deleted) {
+    ctx.throw(404);
+  }
+
+  ctx.statusCode = 204;
+  ctx.body = undefined;
+});
+
 unitsRouter.post('/', async ctx => {
   const data = ctx.request.body;
 
