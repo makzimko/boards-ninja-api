@@ -10,4 +10,10 @@ export type UnitMethods = Record<string, unknown>;
 
 export interface IUnitDocument extends IUnit, Document, UnitMethods {}
 
-export type IUnitModel = PaginateModel<IUnitDocument>;
+export type UnitStatics = {
+  findByIds: {
+    (this: IUnitModel, ids: string[]): Promise<IUnitDocument[]>;
+  };
+};
+
+export interface IUnitModel extends PaginateModel<IUnitDocument>, UnitStatics {}

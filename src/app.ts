@@ -7,6 +7,7 @@ import systemRouter from './routes/system';
 import authRouter from './routes/v1/auth';
 import projectsRouter from './routes/v1/projects';
 import unitsRouter from './routes/v1/units';
+import listsRouter from './routes/v1/lists';
 
 const App = new Koa();
 
@@ -26,6 +27,7 @@ App.use(systemRouter.routes());
 App.use(authRouter.routes());
 App.use(projectsRouter.routes());
 App.use(unitsRouter.routes());
+App.use(listsRouter.routes());
 
 App.use(async ctx => {
   ctx.throw(404);

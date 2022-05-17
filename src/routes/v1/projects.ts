@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 
-import { ProjectModel, UnitModel } from '../../models';
+import { ListModel, ProjectModel, UnitModel } from '../../models';
 import authMiddleware from '../../middleware/auth';
 import projectMiddleware from '../../middleware/project';
 
@@ -58,6 +58,42 @@ projectsRouter.post(
   async ctx => {
     const { name } = ctx.request.body;
     ctx.body = await ctx.state.project.createSimpleUnit(name);
+  },
+);
+
+projectsRouter.get(
+  '/:key/lists',
+  authMiddleware,
+  projectMiddleware,
+  async ctx => {
+    const project = ctx.state.project;
+
+    const filter = {
+      project: project._id,
+    };
+
+    const result = await ListModel.find(filter, '-units', {
+      sort: {
+        predefined: 1,
+      },
+    });
+
+    if (result.length) {
+      ctx.body = result;
+    } else {
+      ctx.body = [await project.createList('Default list', true)];
+    }
+  },
+);
+
+projectsRouter.post(
+  '/:key/lists',
+  authMiddleware,
+  projectMiddleware,
+  async ctx => {
+    const { name } = ctx.request.body;
+    const project = ctx.state.project;
+    ctx.body = await project.createList(name);
   },
 );
 

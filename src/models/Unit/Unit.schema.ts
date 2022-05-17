@@ -3,6 +3,7 @@ import mongooseLeanDefaults from 'mongoose-lean-defaults';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 import { IUnitDocument } from './Unit.types';
+import unitStatics from './Unit.statics';
 
 const UnitSchema = new Schema<IUnitDocument>({
   name: {
@@ -20,6 +21,7 @@ const UnitSchema = new Schema<IUnitDocument>({
   },
 });
 
+UnitSchema.static(unitStatics);
 UnitSchema.plugin(mongooseLeanDefaults);
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

@@ -2,6 +2,7 @@ import Router from '@koa/router';
 
 import { UnitModel } from '../../models';
 import authMiddleware from '../../middleware/auth';
+import { Types } from 'mongoose';
 
 const defaultSelect = '-__v';
 const unitsRouter = new Router();
@@ -61,6 +62,17 @@ unitsRouter.post('/', async ctx => {
   await unit.save();
 
   ctx.body = await UnitModel.findById(unit._id, { select: defaultSelect });
+});
+
+unitsRouter.post('/list', async ctx => {
+  const { ids } = ctx.request.body;
+
+  ctx.body = await UnitModel.find({
+    _id: { $in: ids.map(id => Types.ObjectId(id)) },
+  }).lean({
+    defaults: true,
+    select: defaultSelect,
+  });
 });
 
 export default unitsRouter;
