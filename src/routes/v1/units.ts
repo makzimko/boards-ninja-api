@@ -52,6 +52,21 @@ unitsRouter.delete('/:id', authMiddleware, async ctx => {
     ctx.throw(404);
   }
 
+  await ListModel.findOneAndUpdate(
+    {
+      units: {
+        $all: [id],
+      },
+    },
+    {
+      $pull: {
+        units: {
+          $in: [id],
+        },
+      },
+    },
+  );
+
   ctx.statusCode = 204;
   ctx.body = undefined;
 });
