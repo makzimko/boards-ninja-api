@@ -1,4 +1,4 @@
-import { Types, Schema } from 'mongoose';
+import { Types } from 'mongoose';
 
 import { UnitStatics } from './Unit.types';
 import { UnitModel } from '../index';
@@ -15,7 +15,7 @@ const unitStatics: UnitStatics = {
   moveUnits: async function (units, list) {
     const unitIds = units.map(({ _id }) => Types.ObjectId(_id));
 
-    await ListModel.updateMany(
+    const updateSourceLists = ListModel.updateMany(
       {
         units: { $all: unitIds },
       },
@@ -26,11 +26,24 @@ const unitStatics: UnitStatics = {
       },
     );
 
-    await list.update({
+    const updateUnits = UnitModel.updateMany(
+      {
+        _id: {
+          $in: unitIds,
+        },
+      },
+      {
+        list: list._id,
+      },
+    );
+
+    const updateDestinationList = list.update({
       $push: {
         units: { $each: unitIds },
       },
     });
+
+    await Promise.all([updateSourceLists, updateDestinationList, updateUnits]);
   },
 };
 

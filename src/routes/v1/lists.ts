@@ -21,6 +21,7 @@ listsRouter.post('/:id/units', authMiddleware, listMiddleware, async ctx => {
   const unit = new UnitModel({
     ...data,
     project: Types.ObjectId(list.project),
+    list: list._id,
   });
   await unit.save();
 

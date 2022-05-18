@@ -5,6 +5,7 @@ interface IUnit {
   name: string;
   project: ObjectId;
   completed: boolean;
+  list: ObjectId;
 }
 
 export type UnitMethods = Record<string, unknown>;
