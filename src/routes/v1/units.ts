@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 
-import { UnitModel } from '../../models';
+import { ListModel, UnitModel } from '../../models';
 import authMiddleware from '../../middleware/auth';
 import { Types } from 'mongoose';
 
@@ -55,7 +55,7 @@ unitsRouter.delete('/:id', authMiddleware, async ctx => {
   ctx.body = undefined;
 });
 
-unitsRouter.post('/', async ctx => {
+unitsRouter.post('/', authMiddleware, async ctx => {
   const data = ctx.request.body;
 
   const unit = new UnitModel(data);
@@ -64,7 +64,7 @@ unitsRouter.post('/', async ctx => {
   ctx.body = await UnitModel.findById(unit._id, { select: defaultSelect });
 });
 
-unitsRouter.post('/list', async ctx => {
+unitsRouter.post('/list', authMiddleware, async ctx => {
   const { ids } = ctx.request.body;
 
   ctx.body = await UnitModel.find({
@@ -73,6 +73,34 @@ unitsRouter.post('/list', async ctx => {
     defaults: true,
     select: defaultSelect,
   });
+});
+
+unitsRouter.post('/move', authMiddleware, async ctx => {
+  const { ids, from, to } = ctx.request.body;
+
+  const units = await UnitModel.findByIds(ids);
+  if (units.length !== ids.length) {
+    const missingUnitIds = ids.filter(
+      id => !units.find(({ _id }) => _id.toString() === id),
+    );
+
+    ctx.throw(400, `Can't find units: ${missingUnitIds.join(', ')}`);
+  }
+
+  const fromList = await ListModel.findById(from);
+  if (!fromList) {
+    ctx.throw(400, `Can't find list: ${from}`);
+  }
+
+  const toList = await ListModel.findById(to);
+  if (!toList) {
+    ctx.throw(400, `Can't find list: ${to}`);
+  }
+
+  await UnitModel.moveUnits(units, { from: fromList, to: toList });
+
+  ctx.statusCode = 204;
+  ctx.body = undefined;
 });
 
 export default unitsRouter;
