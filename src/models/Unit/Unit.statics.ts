@@ -2,6 +2,7 @@ import { Types, Schema } from 'mongoose';
 
 import { UnitStatics } from './Unit.types';
 import { UnitModel } from '../index';
+import ListModel from '../List';
 
 const unitStatics: UnitStatics = {
   findByIds: async function (ids) {
@@ -11,29 +12,21 @@ const unitStatics: UnitStatics = {
 
     return units;
   },
-  moveUnits: async function (units, { from, to }) {
+  moveUnits: async function (units, list) {
     const unitIds = units.map(({ _id }) => Types.ObjectId(_id));
 
-    const fromListUnits = from.units.map(id => id);
-
-    const missingUnitInList = unitIds.filter(
-      id => !Array.from(fromListUnits).find(unit => id.equals(unit.toString())),
-    );
-
-    if (missingUnitInList.length) {
-      return Error(`Can't find units ${missingUnitInList} in list ${from._id}`);
-    }
-
-    await from.update(
+    await ListModel.updateMany(
+      {
+        units: { $all: unitIds },
+      },
       {
         $pull: {
           units: { $in: unitIds },
         },
       },
-      { upsert: true },
     );
 
-    await to.update({
+    await list.update({
       $push: {
         units: { $each: unitIds },
       },

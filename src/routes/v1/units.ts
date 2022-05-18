@@ -92,7 +92,7 @@ unitsRouter.post('/list', authMiddleware, async ctx => {
 });
 
 unitsRouter.post('/move', authMiddleware, async ctx => {
-  const { ids, from, to } = ctx.request.body;
+  const { ids, list } = ctx.request.body;
 
   const units = await UnitModel.findByIds(ids);
   if (units.length !== ids.length) {
@@ -103,24 +103,12 @@ unitsRouter.post('/move', authMiddleware, async ctx => {
     ctx.throw(400, `Can't find units: ${missingUnitIds.join(', ')}`);
   }
 
-  const fromList: IListDocument = await ListModel.findById(from);
-  if (!fromList) {
-    ctx.throw(400, `Can't find list: ${from}`);
+  const destinationList = await ListModel.findById(list);
+  if (!destinationList) {
+    ctx.throw(400, `Can't find list ${list}`);
   }
 
-  const toList = await ListModel.findById(to);
-  if (!toList) {
-    ctx.throw(400, `Can't find list ${to}`);
-  }
-
-  const error = await UnitModel.moveUnits(units, {
-    from: fromList,
-    to: toList,
-  });
-
-  if (error) {
-    ctx.throw(400, error);
-  }
+  await UnitModel.moveUnits(units, destinationList);
 
   ctx.statusCode = 204;
   ctx.body = undefined;

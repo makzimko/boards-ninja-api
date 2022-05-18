@@ -19,12 +19,19 @@ export type UnitStatics = {
     (
       this: IUnitModel,
       units: IUnitDocument[],
-      lists: {
-        from: IListDocument;
-        to: IListDocument;
-      },
+      list: IListDocument,
     ): Promise<unknown>;
   };
+  // moveUnits: {
+  //   (
+  //     this: IUnitModel,
+  //     units: IUnitDocument[],
+  //     lists: {
+  //       from: IListDocument;
+  //       to: IListDocument;
+  //     },
+  //   ): Promise<unknown>;
+  // };
 };
 
 export interface IUnitModel extends PaginateModel<IUnitDocument>, UnitStatics {}
