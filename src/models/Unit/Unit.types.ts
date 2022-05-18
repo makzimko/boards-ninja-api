@@ -23,7 +23,7 @@ export type UnitStatics = {
         from: IListDocument;
         to: IListDocument;
       },
-    ): Promise<void>;
+    ): Promise<unknown>;
   };
 };
 

@@ -3,6 +3,7 @@ import Router from '@koa/router';
 import { ListModel, UnitModel } from '../../models';
 import authMiddleware from '../../middleware/auth';
 import { Types } from 'mongoose';
+import { IListDocument } from '../../models/List/List.types';
 
 const defaultSelect = '-__v';
 const unitsRouter = new Router();
@@ -87,17 +88,24 @@ unitsRouter.post('/move', authMiddleware, async ctx => {
     ctx.throw(400, `Can't find units: ${missingUnitIds.join(', ')}`);
   }
 
-  const fromList = await ListModel.findById(from);
+  const fromList: IListDocument = await ListModel.findById(from);
   if (!fromList) {
     ctx.throw(400, `Can't find list: ${from}`);
   }
 
   const toList = await ListModel.findById(to);
   if (!toList) {
-    ctx.throw(400, `Can't find list: ${to}`);
+    ctx.throw(400, `Can't find list ${to}`);
   }
 
-  await UnitModel.moveUnits(units, { from: fromList, to: toList });
+  const error = await UnitModel.moveUnits(units, {
+    from: fromList,
+    to: toList,
+  });
+
+  if (error) {
+    ctx.throw(400, error);
+  }
 
   ctx.statusCode = 204;
   ctx.body = undefined;

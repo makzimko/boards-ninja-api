@@ -1,6 +1,7 @@
+import { Types, Schema } from 'mongoose';
+
 import { UnitStatics } from './Unit.types';
 import { UnitModel } from '../index';
-import { Types } from 'mongoose';
 
 const unitStatics: UnitStatics = {
   findByIds: async function (ids) {
@@ -12,6 +13,16 @@ const unitStatics: UnitStatics = {
   },
   moveUnits: async function (units, { from, to }) {
     const unitIds = units.map(({ _id }) => Types.ObjectId(_id));
+
+    const fromListUnits = from.units.map(id => id);
+
+    const missingUnitInList = unitIds.filter(
+      id => !Array.from(fromListUnits).find(unit => id.equals(unit.toString())),
+    );
+
+    if (missingUnitInList.length) {
+      return Error(`Can't find units ${missingUnitInList} in list ${from._id}`);
+    }
 
     await from.update(
       {
