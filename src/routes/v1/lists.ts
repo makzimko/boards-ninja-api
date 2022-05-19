@@ -2,7 +2,7 @@ import Router from '@koa/router';
 
 import listMiddleware from '../../middleware/list';
 import authMiddleware from '../../middleware/auth';
-import { UnitModel } from '../../models';
+import { ListModel, UnitModel } from '../../models';
 import { Types } from 'mongoose';
 
 const listsRouter = new Router();
@@ -10,8 +10,9 @@ listsRouter.prefix('/v1/lists');
 
 listsRouter.get('/:id/units', authMiddleware, listMiddleware, async ctx => {
   const { list } = ctx.state;
+  const { units } = await ListModel.populate(list, 'units');
 
-  ctx.body = await UnitModel.findByIds(list.units);
+  ctx.body = units;
 });
 
 listsRouter.post('/:id/units', authMiddleware, listMiddleware, async ctx => {

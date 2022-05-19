@@ -43,7 +43,8 @@ const unitStatics: UnitStatics = {
       },
     });
 
-    await Promise.all([updateSourceLists, updateDestinationList, updateUnits]);
+    await Promise.all([updateSourceLists, updateUnits]);
+    await updateDestinationList;
   },
 };
 
