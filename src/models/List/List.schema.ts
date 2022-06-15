@@ -1,6 +1,7 @@
 import { Schema, Types } from 'mongoose';
 import mongooseLeanDefaults from 'mongoose-lean-defaults';
 import { IListDocument } from './List.types';
+import listMethods from './List.methods';
 
 const ListSchema = new Schema<IListDocument>({
   name: {
@@ -26,5 +27,6 @@ const ListSchema = new Schema<IListDocument>({
 });
 
 ListSchema.plugin(mongooseLeanDefaults);
+ListSchema.method(listMethods);
 
 export default ListSchema;
