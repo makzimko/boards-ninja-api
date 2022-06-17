@@ -2,7 +2,7 @@ import UnitModel from '../Unit';
 import { ListModel } from '../index';
 
 import { ListMethods } from './List.types';
-import { IUnitDocument, IUnitModel } from '../Unit/Unit.types';
+import { IUnitDocument } from '../Unit/Unit.types';
 
 const listMethods: ListMethods = {
   edit: async function (props) {
@@ -16,8 +16,8 @@ const listMethods: ListMethods = {
       throw new Error('Destination list ID should be specified');
     }
 
-    const units = (await UnitModel.populate(this, 'units'))
-      .units as IUnitDocument[];
+    const units = (await ListModel.populate(this, 'units'))
+      .units as unknown as IUnitDocument[];
     const list = await ListModel.findById(destinationList);
 
     if (!list) {
