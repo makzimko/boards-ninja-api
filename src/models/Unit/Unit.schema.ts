@@ -26,7 +26,7 @@ const UnitSchema = new Schema<IUnitDocument>({
     required: true,
   },
   data: {
-    type: Schema.Types.Mixed,
+    type: [Schema.Types.Mixed],
     default: [],
   },
 });
