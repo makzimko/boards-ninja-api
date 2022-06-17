@@ -43,6 +43,25 @@ unitsRouter.patch('/:id', authMiddleware, async ctx => {
   });
 });
 
+unitsRouter.patch('/:id/data', authMiddleware, async ctx => {
+  const { id } = ctx.params;
+  const data = ctx.request.body;
+
+  const unit = await UnitModel.findById(id);
+
+  if (!unit) {
+    ctx.throw(404);
+  }
+
+  try {
+    await unit.updateDataFields(data);
+  } catch (e) {
+    ctx.throw(400, e.message);
+  }
+
+  ctx.body = await UnitModel.findById(id);
+});
+
 unitsRouter.delete('/:id', authMiddleware, async ctx => {
   const { id } = ctx.params;
 
