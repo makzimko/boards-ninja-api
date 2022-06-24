@@ -26,4 +26,22 @@ metaRouter.get('/options/:entity', async ctx => {
   };
 });
 
+metaRouter.get('/:entity', async ctx => {
+  const { entity } = ctx.params;
+  const entityFieldDescription = EntityFieldDescriptions[entity];
+
+  if (!entityFieldDescription) {
+    ctx.throw(404);
+  }
+
+  const users = await UserModel.find({}, 'name');
+
+  ctx.body = {
+    fields: entityFieldDescription,
+    options: {
+      user: users,
+    },
+  };
+});
+
 export default metaRouter;
