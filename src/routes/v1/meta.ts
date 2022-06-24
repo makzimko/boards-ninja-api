@@ -34,7 +34,10 @@ metaRouter.get('/:entity', async ctx => {
     ctx.throw(404);
   }
 
-  const users = await UserModel.find({}, 'name');
+  const users = (await UserModel.find({}, 'name')).map(({ _id: id, name }) => ({
+    id,
+    name,
+  }));
 
   ctx.body = {
     fields: entityFieldDescription,
