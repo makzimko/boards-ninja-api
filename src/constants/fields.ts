@@ -24,14 +24,30 @@ const ProgressFieldDescription: FieldDescription<number> = {
   validation: {
     min: 0,
     max: 0,
-    defaultValue: 0
-  }
-}
+    defaultValue: 0,
+  },
+};
+
+const CreatedFieldDescription: FieldDescription<Date> = {
+  label: 'Created on',
+  type: FieldTypes.Date,
+  nullable: false,
+  updatable: false,
+};
+
+const UpdatedFieldDescription: FieldDescription<Date> = {
+  label: 'Updated on',
+  type: FieldTypes.Date,
+  nullable: false,
+  updatable: false,
+};
 
 export const EntityFieldDescriptions = {
   unit: {
     summary: SummaryFieldDescription,
     author: AuthorFieldDescription,
     progress: ProgressFieldDescription,
+    creates: CreatedFieldDescription,
+    updated: UpdatedFieldDescription,
   },
 };

@@ -17,11 +17,17 @@ const unitStatics: UnitStatics = {
       throw new Error('Author should be specified');
     }
 
+    const timestamp = new Date().toISOString();
+
     const unit = new UnitModel({
       name,
       project: project,
       list: list,
-      data,
+      data: {
+        ...data,
+        created: timestamp,
+        updated: timestamp,
+      },
     });
 
     return unit.save();

@@ -2,7 +2,7 @@ import { UnitMethods } from './Unit.types';
 import { EntityFieldDescriptions } from '../../constants/fields';
 
 const unitMethods: UnitMethods = {
-  updateDataFields: async function (data) {
+  updateDataFields: async function (data = {}) {
     const unsupportedFields = Object.keys(data).filter(
       fieldName => !EntityFieldDescriptions.unit[fieldName],
     );
@@ -11,9 +11,14 @@ const unitMethods: UnitMethods = {
       throw new Error(`Fields not supported: ${unsupportedFields.join(', ')}`);
     }
 
+    const dataToSet = {
+      ...data,
+      updated: new Date().toISOString(),
+    };
+
     this.set(
       'data',
-      Object.entries(data).reduce((acc, [name, value]) => {
+      Object.entries(dataToSet).reduce((acc, [name, value]) => {
         if (value === null) {
           const { [name]: _, ...rest } = acc;
           return rest;

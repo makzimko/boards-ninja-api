@@ -1,9 +1,8 @@
 import Router from '@koa/router';
+import { Types } from 'mongoose';
 
 import { ListModel, UnitModel } from '../../models';
 import authMiddleware from '../../middleware/auth';
-import { Types } from 'mongoose';
-import { IListDocument } from '../../models/List/List.types';
 
 const defaultSelect = '-__v';
 const unitsRouter = new Router();
@@ -32,6 +31,7 @@ unitsRouter.patch('/:id', authMiddleware, async ctx => {
   const data = ctx.request.body;
 
   const unit = await UnitModel.findByIdAndUpdate(id, data);
+  await unit.updateDataFields();
 
   if (!unit) {
     ctx.throw(404);

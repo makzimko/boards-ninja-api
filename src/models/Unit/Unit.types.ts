@@ -12,7 +12,7 @@ interface IUnit {
 
 export type UnitMethods = {
   updateDataFields: {
-    (this: IUnitDocument, data: Record<string, unknown>): Promise<void>;
+    (this: IUnitDocument, data?: Record<string, unknown>): Promise<void>;
   };
 };
 

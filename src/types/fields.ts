@@ -2,6 +2,7 @@ export enum FieldTypes {
   'String',
   'Number',
   'User',
+  'Date',
 }
 
 export type FieldDescription<T> = {
