@@ -13,8 +13,10 @@ export type FieldDescription<T> = {
     min?: number;
     max?: number;
     defaultValue?: T;
-  }
+  };
 };
+
+export type Fields = Record<string, unknown>;
 
 export type Field = {
   name: string;

@@ -1,5 +1,6 @@
-import { ObjectId, Document, PaginateModel } from 'mongoose';
+import { ObjectId, Document, PaginateModel, Types } from 'mongoose';
 import { IListDocument } from '../List/List.types';
+import { Fields } from '../../types/fields';
 
 interface IUnit {
   name: string;
@@ -20,6 +21,15 @@ export interface IUnitDocument extends IUnit, Document, UnitMethods {}
 export type UnitStatics = {
   findByIds: {
     (this: IUnitModel, ids: string[]): Promise<IUnitDocument[]>;
+  };
+  createUnit: {
+    (
+      this: IUnitModel,
+      name: string,
+      project: Types.ObjectId,
+      list: Types.ObjectId,
+      data: Fields,
+    );
   };
   moveUnits: {
     (

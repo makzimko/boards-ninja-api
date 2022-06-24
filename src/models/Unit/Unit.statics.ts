@@ -12,6 +12,20 @@ const unitStatics: UnitStatics = {
 
     return units;
   },
+  createUnit: async function (name, project, list, data) {
+    if (!data.author) {
+      throw new Error('Author should be specified');
+    }
+
+    const unit = new UnitModel({
+      name,
+      project: project,
+      list: list,
+      data,
+    });
+
+    return unit.save();
+  },
   moveUnits: async function (units, list) {
     const unitIds = units.map(({ _id }) => Types.ObjectId(_id));
 

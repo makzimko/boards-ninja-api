@@ -1,9 +1,9 @@
 import Router from '@koa/router';
+import { Types } from 'mongoose';
 
 import listMiddleware from '../../middleware/list';
 import authMiddleware from '../../middleware/auth';
 import { ListModel, UnitModel } from '../../models';
-import { Types } from 'mongoose';
 
 const listsRouter = new Router();
 listsRouter.prefix('/v1/lists');
@@ -51,12 +51,14 @@ listsRouter.post('/:id/units', authMiddleware, listMiddleware, async ctx => {
   const { list } = ctx.state;
   const data = ctx.request.body;
 
-  const unit = new UnitModel({
-    ...data,
-    project: Types.ObjectId(list.project),
-    list: list._id,
-  });
-  await unit.save();
+  const unit = await UnitModel.createUnit(
+    data.name,
+    Types.ObjectId(list.project),
+    list._id,
+    {
+      author: ctx.state.user._id,
+    },
+  );
 
   list.units.push(unit._id);
   await list.save();
