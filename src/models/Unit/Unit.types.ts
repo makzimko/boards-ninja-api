@@ -1,13 +1,12 @@
 import { ObjectId, Document, PaginateModel } from 'mongoose';
 import { IListDocument } from '../List/List.types';
-import { Field } from '../../types/fields';
 
 interface IUnit {
   name: string;
   project: ObjectId;
   completed: boolean;
   list: ObjectId;
-  data: Field[];
+  data: Record<string, unknown>;
 }
 
 export type UnitMethods = {

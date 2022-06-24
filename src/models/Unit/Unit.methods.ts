@@ -15,23 +15,13 @@ const unitMethods: UnitMethods = {
       'data',
       Object.entries(data).reduce((acc, [name, value]) => {
         if (value === null) {
-          return acc.filter(field => field.name !== name);
+          const { [name]: _, ...rest } = acc;
+          return rest;
         }
-
-        const isFieldExists = acc.find(field => field.name === name);
-
-        if (isFieldExists) {
-          return acc.map(field =>
-            field.name === name
-              ? {
-                  name,
-                  value,
-                }
-              : field,
-          );
-        }
-
-        return [...acc, { name, value }];
+        return {
+          ...acc,
+          [name]: value,
+        };
       }, this.data),
     );
 
