@@ -23,3 +23,10 @@ export type Field = {
   name: string;
   value: unknown;
 };
+
+export type PickerOption = {
+  id: string;
+  name: string;
+};
+
+export type PickerOptions = PickerOption[];
