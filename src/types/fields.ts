@@ -4,11 +4,16 @@ export enum FieldTypes {
   'User',
 }
 
-export type FieldDescription = {
+export type FieldDescription<T> = {
   label: string;
   type: FieldTypes;
   nullable: boolean;
   updatable: boolean;
+  validation?: {
+    min?: number;
+    max?: number;
+    defaultValue?: T;
+  }
 };
 
 export type Field = {
