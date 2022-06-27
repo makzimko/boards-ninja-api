@@ -2,6 +2,14 @@ import { UnitMethods } from './Unit.types';
 import { EntityFieldDescriptions } from '../../constants/fields';
 
 const unitMethods: UnitMethods = {
+  archive: async function () {
+    if (this.archived) {
+      throw new Error('Unit is already archived');
+    }
+
+    this.set('archived', true);
+    await this.save();
+  },
   updateDataFields: async function (data = {}) {
     const unsupportedFields = Object.keys(data).filter(
       fieldName => !EntityFieldDescriptions.unit[fieldName],

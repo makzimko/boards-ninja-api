@@ -28,9 +28,31 @@ unitsRouter.get('/:id', authMiddleware, async ctx => {
 
 unitsRouter.patch('/:id', authMiddleware, async ctx => {
   const { id } = ctx.params;
-  const data = ctx.request.body;
+  const { project, archived, list, data, ...rest } = ctx.request.body;
 
-  const unit = await UnitModel.findByIdAndUpdate(id, data);
+  if (project) {
+    ctx.throw(400, 'Changing of project directly is not allowed');
+  }
+
+  if (archived) {
+    ctx.throw(400, 'Archiving of unit directly is not allowed');
+  }
+
+  if (list) {
+    ctx.throw(400, 'Changing of list directly is not allowed');
+  }
+
+  if (data) {
+    ctx.throw(400, 'Changing of data directly is not allowed');
+  }
+
+  const unit = await UnitModel.findById(id);
+
+  if (unit.archived) {
+    ctx.throw(400, "Archived unit can't be changed");
+  }
+
+  await unit.set(rest);
   await unit.updateDataFields();
 
   if (!unit) {
@@ -53,6 +75,10 @@ unitsRouter.patch('/:id/data', authMiddleware, async ctx => {
     ctx.throw(404);
   }
 
+  if (unit.archived) {
+    ctx.throw(400, "Archived unit can't be changed");
+  }
+
   try {
     await unit.updateDataFields(data);
   } catch (e) {
@@ -65,11 +91,17 @@ unitsRouter.patch('/:id/data', authMiddleware, async ctx => {
 unitsRouter.delete('/:id', authMiddleware, async ctx => {
   const { id } = ctx.params;
 
-  const deleted = await UnitModel.findByIdAndDelete(id);
+  const unit = await UnitModel.findById(id);
 
-  if (!deleted) {
+  if (!unit) {
     ctx.throw(404);
   }
+
+  if (unit.archived) {
+    ctx.throw(400, "Archived unit can't be changed");
+  }
+
+  await UnitModel.findByIdAndDelete(id);
 
   await ListModel.findOneAndUpdate(
     {
@@ -122,7 +154,18 @@ unitsRouter.post('/move', authMiddleware, async ctx => {
     ctx.throw(400, `Can't find units: ${missingUnitIds.join(', ')}`);
   }
 
+  const archivedUnits = units.filter(({ archived }) => archived);
+
+  if (archivedUnits.length) {
+    ctx.throw(400, `Archived units can't be moved`);
+  }
+
   const destinationList = await ListModel.findById(list);
+
+  if (destinationList.archived) {
+    ctx.throw(400, `Can't move units to archived list`);
+  }
+
   if (!destinationList) {
     ctx.throw(400, `Can't find list ${list}`);
   }

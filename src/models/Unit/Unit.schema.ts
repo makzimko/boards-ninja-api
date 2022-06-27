@@ -20,6 +20,10 @@ const UnitSchema = new Schema<IUnitDocument>({
     type: Boolean,
     default: false,
   },
+  archived: {
+    type: Boolean,
+    default: false,
+  },
   list: {
     type: Types.ObjectId,
     ref: 'List',

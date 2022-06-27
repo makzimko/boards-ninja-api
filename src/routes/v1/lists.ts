@@ -12,17 +12,36 @@ listsRouter.patch('/:id', authMiddleware, listMiddleware, async ctx => {
   const { list } = ctx.state;
   const data = ctx.request.body;
 
+  if (list.archived) {
+    ctx.throw(400, "Archived list can't be changed");
+  }
+
   await list.edit(data);
 
   ctx.body = await ListModel.findById(list._id);
+});
+
+listsRouter.patch('/:id/archive', authMiddleware, listMiddleware, async ctx => {
+  const { list } = ctx.state;
+  const { destination } = ctx.request.body;
+
+  if (list.predefined) {
+    ctx.throw(400, 'Archiving of predefined list if forbidden');
+  }
+
+  try {
+    ctx.body = await list.archive(destination);
+  } catch (e) {
+    ctx.throw(400, e.message);
+  }
 });
 
 listsRouter.delete('/:id', authMiddleware, listMiddleware, async ctx => {
   const { list } = ctx.state;
   const { destination } = ctx.request.body;
 
-  if (!list) {
-    ctx.throw(404);
+  if (list.archived) {
+    ctx.throw(400, "Archived list can't be removed");
   }
 
   if (list.predefined) {

@@ -24,6 +24,10 @@ const ListSchema = new Schema<IListDocument>({
     type: Boolean,
     required: true,
   },
+  archived: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 ListSchema.plugin(mongooseLeanDefaults);

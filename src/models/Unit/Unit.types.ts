@@ -6,11 +6,15 @@ interface IUnit {
   name: string;
   project: ObjectId;
   completed: boolean;
+  archived: boolean;
   list: ObjectId;
   data: Record<string, unknown>;
 }
 
 export type UnitMethods = {
+  archive: {
+    (this: IUnitDocument): Promise<void>;
+  };
   updateDataFields: {
     (this: IUnitDocument, data?: Record<string, unknown>): Promise<void>;
   };
