@@ -52,7 +52,7 @@ listsRouter.delete('/:id', authMiddleware, listMiddleware, async ctx => {
     const movedUnits = await list.removeList(destination);
 
     ctx.body = {
-      movedUnits,
+      moved: movedUnits,
     };
   } catch (e) {
     ctx.throw(400, e.message);
